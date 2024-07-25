@@ -3,17 +3,10 @@ import path from "path";
 import { fileURLToPath } from "url";
 import dayjs from "dayjs";
 import cors from "cors";
-import redis from "redis";
-import expressRedisCache from "express-redis-cache";
 import { loadSSHData } from "./server/ssh.js";
 
 const app = express();
 const port = 43000;
-const client = redis.createClient();
-const cache = expressRedisCache({
-  client: client,
-  expire: 1000 * 60 * 5, // 缓存时间，单位为秒
-});
 
 // 获取当前文件的目录名
 const __filename = fileURLToPath(import.meta.url);
@@ -46,7 +39,7 @@ app.get("/", (req, res) => {
 });
 
 // 后端接口
-app.post("/api/sshLog", cache.route(), loadSSHData);
+app.post("/api/sshLog", loadSSHData);
 
 // 启动服务器
 app.listen(port, () => {
