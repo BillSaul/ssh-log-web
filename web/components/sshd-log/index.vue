@@ -77,13 +77,14 @@
 </template>
 
 <script setup>
-import axios from "axios";
+import { getSSHLogs } from "@/api/ssh";
 import dayjs from "dayjs";
 import { ref } from "vue";
 
-const tableData = ref([]);
-const total = ref(0);
-const loading = ref(false);
+const tableData = ref([]); // 表格数据
+const total = ref(0); // 表格数据总数
+const loading = ref(false); // 加载状态
+// 查询表单数据
 const formData = ref({
   pageNum: 1,
   pageSize: 10,
@@ -93,6 +94,7 @@ const formData = ref({
     dayjs().endOf("day").format("YYYY-MM-DD HH:mm:ss"),
   ],
 });
+// 时间快捷选择
 const shortcuts = [
   {
     text: "近一周",
@@ -117,14 +119,11 @@ const shortcuts = [
   },
 ];
 
+// 获取SSH登录日志
 const getSSHData = async (pageNum = 1) => {
   formData.value.pageNum = pageNum;
   loading.value = true;
-  const { data } = await axios({
-    url: `${import.meta.env.VITE_API}/api/sshLog`,
-    method: "post",
-    data: formData.value,
-  });
+  const { data } = await getSSHLogs(formData.value);
   loading.value = false;
   if (data.code === 200) {
     tableData.value = data.data.list;
@@ -133,6 +132,7 @@ const getSSHData = async (pageNum = 1) => {
 };
 getSSHData();
 
+// 查询条件变化
 const searchChange = () => {
   getSSHData(1);
 };

@@ -24,19 +24,19 @@ WORKDIR /www
 # 设置环境变量
 ENV WORKDIR=/www
 ENV RUN_ENVIRONMENT=docker
-ENV API=http://localhost:43000
+ENV SERVER_PORT=43000
 
 # 复制package.json
 COPY package.json ./
 
-# 开启pnpm
-RUN corepack enable pnpm
-
 # 安装依赖
-RUN pnpm install
+RUN npm install --registry=https://registry.npmmirror.com
 
 # 复制项目文件
 COPY . .
 
+# 构建web项目
+RUN npm run build:web
+
 # 在容器启动时运行的命令，可以根据需要修改
-CMD ["pnpm", "run", "server"]
+CMD ["npm", "run", "server"]

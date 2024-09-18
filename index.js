@@ -6,7 +6,7 @@ import cors from "cors";
 import { loadSSHData } from "./server/ssh.js";
 
 const app = express();
-const port = 43000;
+const port = process.env.SERVER_PORT || 43000;
 
 // 获取当前文件的目录名
 const __filename = fileURLToPath(import.meta.url);
@@ -30,18 +30,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// 提供静态文件
+// 提供静态文件web服务
 app.use(express.static(path.join(__dirname, "dist")));
-
-// web服务
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
 
 // 后端接口
 app.post("/api/sshLog", loadSSHData);
 
 // 启动服务器
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  console.log(`服务运行在 ${port} 端口`);
 });
