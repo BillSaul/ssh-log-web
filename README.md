@@ -25,7 +25,7 @@ cd ssh-log-web
 #### 2.1.1 构建镜像
 
 ```
-docker build -t ssh-log-web:0.1 .
+docker build -t ssh-log-web:0.2 .
 ```
 
 #### 2.1.2 运行容器
@@ -33,18 +33,7 @@ docker build -t ssh-log-web:0.1 .
 使用 `docker compose`
 
 ```
-services:
-  ssh-log-web:
-    image: "ssh-log-web:0.1"
-    restart: unless-stopped
-    volumes:
-      - "/var/log/journal:/www/log/journal:ro" # 日志目录
-    environment:
-      - TZ=Asia/Shanghai
-      - API=localhost:43000 # 后端的api地址，默认为localhost:43000，请调整为自己服务器的ip地址和自己想要的端口
-    network_mode: "host"
-    container_name: ssh-log-web
-    hostname: ssh-log-web
+docker compose up -d
 ```
 
 ### 2.2 直接运行
@@ -57,11 +46,7 @@ pnpm install
 
 当然也可以使用 `npm`、`yarn` 来安装依赖。
 
-#### 2.2.2 配置环境变量
-
-修改 `.env` 文件中的 `API` 为自己服务器的ip和自己想要的端口
-
-#### 2.2.3 运行
+#### 2.2.2 运行
 
 ```shell
 pnpm run server
